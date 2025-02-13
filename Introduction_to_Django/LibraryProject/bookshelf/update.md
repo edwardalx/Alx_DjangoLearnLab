@@ -1,0 +1,4 @@
+book = Book.objects.get(id=1)
+book.title = "Nineteen Eighty-Four" 
+print(book.title) 
+Nineteen Eighty-Four
