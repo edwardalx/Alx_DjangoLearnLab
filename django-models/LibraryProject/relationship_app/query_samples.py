@@ -2,8 +2,8 @@ from django.db import models
 from relationship_app.models import Author, Book,Library, Librarian
 
 author_name = ""
-my_author = Author.objects.get(name=author_name)
-all_books_by_author = Book.objects.filter(author = my_author)
+author = Author.objects.get(name=author_name)
+all_books_by_author = Book.objects.filter(author=author)
 for book in all_books_by_author:
     print(book.title)
 
