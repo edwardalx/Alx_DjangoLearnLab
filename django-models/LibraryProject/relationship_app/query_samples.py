@@ -1,12 +1,14 @@
 from django.db import models
 from relationship_app.models import Author, Book,Library, Librarian
 
-my_author = Author.objects.get(id="")
+author_name = ""
+my_author = Author.objects.get(name=author_name)
 all_books_by_author = Book.objects.filter(author = my_author)
 for book in all_books_by_author:
     print(book.title)
 
-my_library = Library.objects.get(id="")
+library_name = ""
+my_library = Library.objects.get(name=library_name)
 # all_books_in_lib = Book.objects.filter(library = my_library)
 all_books_in_lib = my_library.books.all()
 
