@@ -19,5 +19,5 @@ for book in all_books_in_lib:
 
 # print(librarian_for_a_Library.name)
 
-my_librarian = Librarian.objects.get(name="")
-librarys_librarian = my_librarian.library
+my_librarian = Librarian.objects.get(library="")
+librarys_librarian = my_librarian.name
