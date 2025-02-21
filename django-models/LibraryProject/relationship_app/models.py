@@ -11,11 +11,19 @@ class Book(models.Model):
     title = models.CharField(max_length=255, null=False)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return  f"Title:{self.title} Author: {self.author}"
+
 class Library(models.Model):
     name = models.CharField(max_length=255, null=False)
     books = models.ManyToManyField(Book, related_name='library')
 
+    def __str__(self):
+        return  f"Title:{self.name} Author: {self.books}"
+
 class Librarian(models.Model):
     name = models.CharField(max_length=255, null=False)
     library = models.OneToOneField(Library, related_name='librarian', on_delete=models.CASCADE)
+    def __str__(self):
+        return  f"Title:{self.name} Author: {self.library}"
 
