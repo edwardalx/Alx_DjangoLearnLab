@@ -1,11 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.views.generic import DetailView
 from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
 from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
 from django.contrib.auth import login
 # Create your views here.
 def list_books(request):
@@ -24,7 +22,13 @@ class LibraryDetailView(DetailView):
         library = self.object
         context['books'] = library.books.all()
         return context
-class SignUpView(CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('login')  # Redirects to login page after successful signup
-    template_name = 'registration/register.html'  # Path to your signup template
+def register(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  # Log the user in after registration
+            return redirect('home')  # Redirect to the home page
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/register.html', {'form': form})
