@@ -8,7 +8,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import user_passes_test
-from django.contrib.auth import views as auth_views
+from django.core.exceptions import PermissionDenied
+
 # Create your views here.
 def list_books(request):
     books = Book.objects.all()
@@ -59,32 +60,15 @@ class CustomLogoutView(View):
         """
         Handle GET requests by rendering the logout confirmation page.
         """
-# Check if the user is an Admin
-def is_admin(user):
-    return user.profile.role == 'Admin'
+def user_is_admin(user):
+    return user.userprofile.role == 'Admin'
 
-# Check if the user is a Librarian
-def is_librarian(user):
-    return user.profile.role == 'Librarian'
+def user_is_librarian(user):
+    return user.userprofile.role == 'Librarian'
 
-# Check if the user is a Member
-def is_member(user):
-    return user.profile.role == 'Member'
+def user_is_member(user):
+    return user.userprofile.role == 'Member'
 
-# Admin View
-@user_passes_test(is_admin)
-def admin_view(request):
-    return render(request, 'relationship_app/admin_view.html')
-
-# Librarian View
-@user_passes_test(is_librarian)
-def librarian_view(request):
-    return render(request, 'relationship_app/librarian_view.html')
-
-# Member View
-@user_passes_test(is_member)
-def member_view(request):
-    return render(request, 'relationship_app/member_view.html')
 
 # Example: Accessing the profile in a view
 def my_view(request):
