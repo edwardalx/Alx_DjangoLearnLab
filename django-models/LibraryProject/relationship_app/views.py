@@ -1,13 +1,14 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.views import View
 from django.views.generic import DetailView
 from django.views.generic.detail import DetailView
-from .models import Book
+from .models import Author, Book
 from .models import Library
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.decorators import permission_required
 # Create your views here.
 def list_books(request):
     books = Book.objects.all()
@@ -82,11 +83,57 @@ def librarian_view(request):
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
 
-# Example: Accessing the profile in a view
-def my_view(request):
-    user = request.user
-    if hasattr(user, 'profile'):
-        profile = user.profile
-    else:
-        # Handle the case where the profile does not exist
-        profile = None
+# # Example: Accessing the profile in a view
+# def my_view(request):
+#     user = request.user
+#     if hasattr(user, 'profile'):
+#         profile = user.profile
+#     else:
+#         # Handle the case where the profile does not exist
+#         profile = None
+
+@permission_required('relationship_app.can_add_book')
+def add_book(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        author_id = request.POST.get("author")  # Get author ID from form
+        author = Author.objects.get(id=author_id)  # Retrieve author instance
+
+        # Create a new book instance
+        Book.objects.create(title=title, author=author)
+
+        return redirect("list_books")  # Redirect to book list after adding
+
+    authors = Author.objects.all()  # Get all authors for selection in form
+    return render(request, "relationship_app/add_book.html", {"authors": authors})
+
+@permission_required('relationship_app.can_change_book', raise_exception=True)
+def edit_book(request, book_id):
+    """View to edit a book, only for users with 'can_change_book' permission."""
+    book = get_object_or_404(Book, id=book_id)
+
+    if request.method == "POST":
+        title = request.POST.get("title")
+        author_id = request.POST.get("author")  # Get author ID from form
+        author = get_object_or_404(Author, id=author_id)  # Ensure author exists
+
+        # Update book details
+        book.title = title
+        book.author = author
+        book.save()
+
+        return redirect('book_list')  # Redirect after updating
+
+    authors = Author.objects.all()  # Get all authors for dropdown
+    return render(request, 'relationship_app/edit_book.html', {"book": book, "authors": authors})
+
+@permission_required('relationship_app.can_delete_book', raise_exception=True)
+def delete_book(request, book_id):
+    """View to delete a book, only for users with 'can_delete_book' permission."""
+    book = get_object_or_404(Book, id=book_id)
+
+    if request.method == "POST":
+        book.delete()
+        return redirect('book_list')
+
+    return render(request, 'relationship_app/delete_book.html', {"book": book})
