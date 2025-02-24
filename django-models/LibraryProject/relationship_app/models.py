@@ -28,15 +28,23 @@ class Librarian(models.Model):
     def __str__(self):
         return  f"Name:{self.name} Library: {self.library.name}"
 
-class UserProfile(models.Model):
-    ROLE_CHOICES = [
-        ('Admin', 'Admin'),
-        ('Librarian', 'Librarian'),
-        ('Member', 'Member'),
-    ]
+# class UserProfile(models.Model):
+#     ROLE_CHOICES = [
+#         ('Admin', 'Admin'),
+#         ('Librarian', 'Librarian'),
+#         ('Member', 'Member'),
+#     ]
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='Member')
+
+#     def __str__(self):
+#         return f"{self.user.username} - {self.role}"
+
+class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='Member')
+    # Add additional fields for the profile
+    bio = models.TextField(blank=True)
+    location = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        return f"{self.user.username} - {self.role}"
-
+        return f"{self.user.username}'s Profile"
