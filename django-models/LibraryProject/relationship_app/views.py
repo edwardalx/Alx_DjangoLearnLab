@@ -1,12 +1,14 @@
 from django.shortcuts import redirect, render
+from django.views import View
 from django.views.generic import DetailView
 from django.views.generic.detail import DetailView
 from .models import Book
 from .models import Library
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth import views as auth_views
 # Create your views here.
 def list_books(request):
     books = Book.objects.all()
@@ -38,11 +40,22 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form})
 
 class CustomLoginView(LoginView):
-    template_name = 'registration/login.html'
+    template_name = 'registration/logout.html'
 
-class CustomLogoutView(LogoutView):
-    next_page = 'registration/logout.html'
+class CustomLogoutView(View):
+    template_name = 'registration/logout.html'  # Specify the template name
 
+    def post(self, request, *args, **kwargs):
+        """
+        Handle POST requests for logout.
+        """
+        logout(request)  # Log the user out
+        return redirect('home')  # Redirect to the homepage after logout
+
+    def get(self, request, *args, **kwargs):
+        """
+        Handle GET requests by rendering the logout confirmation page.
+        """
 # Check if the user is an Admin
 def is_admin(user):
     return user.profile.role == 'Admin'
