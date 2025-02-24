@@ -69,3 +69,12 @@ def librarian_view(request):
 @user_passes_test(is_member)
 def member_view(request):
     return render(request, 'relationship_app/member_view.html')
+
+# Example: Accessing the profile in a view
+def my_view(request):
+    user = request.user
+    if hasattr(user, 'profile'):
+        profile = user.profile
+    else:
+        # Handle the case where the profile does not exist
+        profile = None
