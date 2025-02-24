@@ -37,16 +37,16 @@ def register(request):
             return redirect('home')  # Redirect to the homepage
     else:
         form = UserCreationForm()
-    return render(request, 'registration/register.html', {'form': form})
+    return render(request, 'relationship_app/register.html', {'form': form})
 
 class CustomLoginView(LoginView):
-    template_name = 'registration/login.html'
+    template_name = 'relationship_app/login.html'
 
 class LogoutView(LoginView):
-    template_name = 'registration/logout.html'
+    template_name = 'relationship_app/logout.html'
 
 class CustomLogoutView(View):
-    template_name = 'registration/logout.html'  # Specify the template name
+    template_name = 'relationship_app/logout.html'  # Specify the template name
 
     def post(self, request, *args, **kwargs):
         """
