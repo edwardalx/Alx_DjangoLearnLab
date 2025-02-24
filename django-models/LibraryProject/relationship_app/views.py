@@ -40,6 +40,9 @@ def register(request):
     return render(request, 'registration/register.html', {'form': form})
 
 class CustomLoginView(LoginView):
+    template_name = 'registration/login.html'
+
+class LogoutView(LoginView):
     template_name = 'registration/logout.html'
 
 class CustomLogoutView(View):
