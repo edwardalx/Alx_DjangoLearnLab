@@ -15,6 +15,8 @@
 <!-- logout.html -->
 {% load static %}
 <!-- logout.html -->
+<!-- logout.html -->
+<!-- logout.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,11 +24,7 @@
     <title>Logout</title>
 </head>
 <body>
-    <h1>Are you sure you want to log out?</h1>
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit">Logout</button>
-    </form>
-    <a href="{% url 'login' %}">Cancel</a>
+    <h1>You have been logged out</h1>
+    <a href="{% url 'login' %}">Login again</a>
 </body>
 </html>
