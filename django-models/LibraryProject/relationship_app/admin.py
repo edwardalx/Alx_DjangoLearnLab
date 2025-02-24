@@ -3,6 +3,6 @@ from django.contrib import admin
 # Register your models here.
 # relationship_app/admin.py
 
-from .models import Profile
+from .models import UserProfile
 
-admin.site.register(Profile)
+admin.site.register(UserProfile)
