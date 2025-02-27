@@ -92,48 +92,48 @@ class CustomLogoutView(View):
 # #         # Handle the case where the profile does not exist
 # #         profile = None
 
-# @permission_required('relationship_app.can_add_book')
-# def add_book(request):
-#     if request.method == "POST":
-#         title = request.POST.get("title")
-#         author_id = request.POST.get("author")  # Get author ID from form
-#         author = Author.objects.get(id=author_id)  # Retrieve author instance
+@permission_required('relationship_app.can_add_book')
+def add_book(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        author_id = request.POST.get("author")  # Get author ID from form
+        author = Author.objects.get(id=author_id)  # Retrieve author instance
 
-#         # Create a new book instance
-#         Book.objects.create(title=title, author=author)
+        # Create a new book instance
+        Book.objects.create(title=title, author=author)
 
-#         return redirect("list_books")  # Redirect to book list after adding
+        return redirect("list_books")  # Redirect to book list after adding
 
-#     authors = Author.objects.all()  # Get all authors for selection in form
-#     return render(request, "relationship_app/add_book.html", {"authors": authors})
+    authors = Author.objects.all()  # Get all authors for selection in form
+    return render(request, "relationship_app/add_book.html", {"authors": authors})
 
-# @permission_required('relationship_app.can_change_book', raise_exception=True)
-# def edit_book(request, book_id):
-#     """View to edit a book, only for users with 'can_change_book' permission."""
-#     book = get_object_or_404(Book, id=book_id)
+@permission_required('relationship_app.can_change_book', raise_exception=True)
+def edit_book(request, book_id):
+    """View to edit a book, only for users with 'can_change_book' permission."""
+    book = get_object_or_404(Book, id=book_id)
 
-#     if request.method == "POST":
-#         title = request.POST.get("title")
-#         author_id = request.POST.get("author")  # Get author ID from form
-#         author = get_object_or_404(Author, id=author_id)  # Ensure author exists
+    if request.method == "POST":
+        title = request.POST.get("title")
+        author_id = request.POST.get("author")  # Get author ID from form
+        author = get_object_or_404(Author, id=author_id)  # Ensure author exists
 
-#         # Update book details
-#         book.title = title
-#         book.author = author
-#         book.save()
+        # Update book details
+        book.title = title
+        book.author = author
+        book.save()
 
-#         return redirect('book_list')  # Redirect after updating
+        return redirect('book_list')  # Redirect after updating
 
-#     authors = Author.objects.all()  # Get all authors for dropdown
-#     return render(request, 'relationship_app/edit_book.html', {"book": book, "authors": authors})
+    authors = Author.objects.all()  # Get all authors for dropdown
+    return render(request, 'relationship_app/edit_book.html', {"book": book, "authors": authors})
 
-# @permission_required('relationship_app.can_delete_book', raise_exception=True)
-# def delete_book(request, book_id):
-#     """View to delete a book, only for users with 'can_delete_book' permission."""
-#     book = get_object_or_404(Book, id=book_id)
+@permission_required('relationship_app.can_delete_book', raise_exception=True)
+def delete_book(request, book_id):
+    """View to delete a book, only for users with 'can_delete_book' permission."""
+    book = get_object_or_404(Book, id=book_id)
 
-#     if request.method == "POST":
-#         book.delete()
-#         return redirect('book_list')
+    if request.method == "POST":
+        book.delete()
+        return redirect('book_list')
 
-#     return render(request, 'relationship_app/delete_book.html', {"book": book})
+    return render(request, 'relationship_app/delete_book.html', {"book": book})
