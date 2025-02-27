@@ -48,92 +48,92 @@ class LogoutView(LoginView):
 class CustomLogoutView(View):
     template_name = 'relationship_app/logout.html'  # Specify the template name
 
-    def post(self, request, *args, **kwargs):
-        """
-        Handle POST requests for logout.
-        """
-        logout(request)  # Log the user out
-        return redirect('home')  # Redirect to the homepage after logout
+#     def post(self, request, *args, **kwargs):
+#         """
+#         Handle POST requests for logout.
+#         """
+#         logout(request)  # Log the user out
+#         return redirect('home')  # Redirect to the homepage after logout
 
-    def get(self, request, *args, **kwargs):
-        """
-        Handle GET requests by rendering the logout confirmation page.
-        """
-# Helper functions for role checks
-def user_is_admin(user):
-    return user.is_authenticated and user.userprofile.role == 'Admin'
+#     def get(self, request, *args, **kwargs):
+#         """
+#         Handle GET requests by rendering the logout confirmation page.
+#         """
+# # Helper functions for role checks
+# def user_is_admin(user):
+#     return user.is_authenticated and user.userprofile.role == 'Admin'
 
-def user_is_librarian(user):
-    return user.is_authenticated and user.userprofile.role == 'Librarian'
+# def user_is_librarian(user):
+#     return user.is_authenticated and user.userprofile.role == 'Librarian'
 
-def user_is_member(user):
-    return user.is_authenticated and user.userprofile.role == 'Member'
+# def user_is_member(user):
+#     return user.is_authenticated and user.userprofile.role == 'Member'
 
-# Views restricted to specific roles
+# # Views restricted to specific roles
 
-@user_passes_test(user_is_admin)
-def admin_view(request):
-    return render(request, 'relationship_app/admin_view.html')
+# @user_passes_test(user_is_admin)
+# def admin_view(request):
+#     return render(request, 'relationship_app/admin_view.html')
 
-@user_passes_test(user_is_librarian)
-def librarian_view(request):
-    return render(request, 'relationship_app/librarian_view.html')
+# @user_passes_test(user_is_librarian)
+# def librarian_view(request):
+#     return render(request, 'relationship_app/librarian_view.html')
 
-@user_passes_test(user_is_member)
-def member_view(request):
-    return render(request, 'relationship_app/member_view.html')
+# @user_passes_test(user_is_member)
+# def member_view(request):
+#     return render(request, 'relationship_app/member_view.html')
 
-# # Example: Accessing the profile in a view
-# def my_view(request):
-#     user = request.user
-#     if hasattr(user, 'profile'):
-#         profile = user.profile
-#     else:
-#         # Handle the case where the profile does not exist
-#         profile = None
+# # # Example: Accessing the profile in a view
+# # def my_view(request):
+# #     user = request.user
+# #     if hasattr(user, 'profile'):
+# #         profile = user.profile
+# #     else:
+# #         # Handle the case where the profile does not exist
+# #         profile = None
 
-@permission_required('relationship_app.can_add_book')
-def add_book(request):
-    if request.method == "POST":
-        title = request.POST.get("title")
-        author_id = request.POST.get("author")  # Get author ID from form
-        author = Author.objects.get(id=author_id)  # Retrieve author instance
+# @permission_required('relationship_app.can_add_book')
+# def add_book(request):
+#     if request.method == "POST":
+#         title = request.POST.get("title")
+#         author_id = request.POST.get("author")  # Get author ID from form
+#         author = Author.objects.get(id=author_id)  # Retrieve author instance
 
-        # Create a new book instance
-        Book.objects.create(title=title, author=author)
+#         # Create a new book instance
+#         Book.objects.create(title=title, author=author)
 
-        return redirect("list_books")  # Redirect to book list after adding
+#         return redirect("list_books")  # Redirect to book list after adding
 
-    authors = Author.objects.all()  # Get all authors for selection in form
-    return render(request, "relationship_app/add_book.html", {"authors": authors})
+#     authors = Author.objects.all()  # Get all authors for selection in form
+#     return render(request, "relationship_app/add_book.html", {"authors": authors})
 
-@permission_required('relationship_app.can_change_book', raise_exception=True)
-def edit_book(request, book_id):
-    """View to edit a book, only for users with 'can_change_book' permission."""
-    book = get_object_or_404(Book, id=book_id)
+# @permission_required('relationship_app.can_change_book', raise_exception=True)
+# def edit_book(request, book_id):
+#     """View to edit a book, only for users with 'can_change_book' permission."""
+#     book = get_object_or_404(Book, id=book_id)
 
-    if request.method == "POST":
-        title = request.POST.get("title")
-        author_id = request.POST.get("author")  # Get author ID from form
-        author = get_object_or_404(Author, id=author_id)  # Ensure author exists
+#     if request.method == "POST":
+#         title = request.POST.get("title")
+#         author_id = request.POST.get("author")  # Get author ID from form
+#         author = get_object_or_404(Author, id=author_id)  # Ensure author exists
 
-        # Update book details
-        book.title = title
-        book.author = author
-        book.save()
+#         # Update book details
+#         book.title = title
+#         book.author = author
+#         book.save()
 
-        return redirect('book_list')  # Redirect after updating
+#         return redirect('book_list')  # Redirect after updating
 
-    authors = Author.objects.all()  # Get all authors for dropdown
-    return render(request, 'relationship_app/edit_book.html', {"book": book, "authors": authors})
+#     authors = Author.objects.all()  # Get all authors for dropdown
+#     return render(request, 'relationship_app/edit_book.html', {"book": book, "authors": authors})
 
-@permission_required('relationship_app.can_delete_book', raise_exception=True)
-def delete_book(request, book_id):
-    """View to delete a book, only for users with 'can_delete_book' permission."""
-    book = get_object_or_404(Book, id=book_id)
+# @permission_required('relationship_app.can_delete_book', raise_exception=True)
+# def delete_book(request, book_id):
+#     """View to delete a book, only for users with 'can_delete_book' permission."""
+#     book = get_object_or_404(Book, id=book_id)
 
-    if request.method == "POST":
-        book.delete()
-        return redirect('book_list')
+#     if request.method == "POST":
+#         book.delete()
+#         return redirect('book_list')
 
-    return render(request, 'relationship_app/delete_book.html', {"book": book})
+#     return render(request, 'relationship_app/delete_book.html', {"book": book})

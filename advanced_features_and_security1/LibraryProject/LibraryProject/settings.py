@@ -136,3 +136,4 @@ LOGIN_REDIRECT_URL = "/register"  # Redirect users after login
 LOGOUT_REDIRECT_URL = "/"  # Redirect after logout
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+AUTH_USER_MODEL = 'bookshelf.CustomUser'
