@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Books</title>
+</head>
+<body>
+    <h1>Books Available:</h1>
+    {% if perms.bookshelf.can_edit_book %}
+    <button type="submit">Edit</button>
+    {% else %}
+    <p>You do not have permission to edit a book.</p>
+    {% endif %}
+
+    {% if perms.bookshelf.can_view_book %}
+    <button type="submit">View</button>
+    {% endif %}
+</body>
+</html>

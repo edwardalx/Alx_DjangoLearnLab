@@ -1,0 +1,3 @@
+{% if perms.app_name.add_post %}
+    <a href="{% url 'create_post' %}">Create New Post</a>
+{% endif %}
