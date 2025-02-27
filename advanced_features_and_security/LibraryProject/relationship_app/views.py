@@ -59,29 +59,29 @@ class CustomLogoutView(View):
 #         """
 #         Handle GET requests by rendering the logout confirmation page.
 #         """
-# # Helper functions for role checks
-# def user_is_admin(user):
-#     return user.is_authenticated and user.userprofile.role == 'Admin'
+# Helper functions for role checks
+def user_is_admin(user):
+    return user.is_authenticated and user.userprofile.role == 'Admin'
 
-# def user_is_librarian(user):
-#     return user.is_authenticated and user.userprofile.role == 'Librarian'
+def user_is_librarian(user):
+    return user.is_authenticated and user.userprofile.role == 'Librarian'
 
-# def user_is_member(user):
-#     return user.is_authenticated and user.userprofile.role == 'Member'
+def user_is_member(user):
+    return user.is_authenticated and user.userprofile.role == 'Member'
 
-# # Views restricted to specific roles
+# Views restricted to specific roles
 
-# @user_passes_test(user_is_admin)
-# def admin_view(request):
-#     return render(request, 'relationship_app/admin_view.html')
+@user_passes_test(user_is_admin)
+def admin_view(request):
+    return render(request, 'relationship_app/admin_view.html')
 
-# @user_passes_test(user_is_librarian)
-# def librarian_view(request):
-#     return render(request, 'relationship_app/librarian_view.html')
+@user_passes_test(user_is_librarian)
+def librarian_view(request):
+    return render(request, 'relationship_app/librarian_view.html')
 
-# @user_passes_test(user_is_member)
-# def member_view(request):
-#     return render(request, 'relationship_app/member_view.html')
+@user_passes_test(user_is_member)
+def member_view(request):
+    return render(request, 'relationship_app/member_view.html')
 
 # # # Example: Accessing the profile in a view
 # # def my_view(request):
