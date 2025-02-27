@@ -10,10 +10,10 @@ class Book(models.Model):
 
     class Meta:
         permissions = [
-            ("can_create_book", "Can create book"),
-            ("can_edit_book", "Can edit book"),
-            ("can_delete_book", "Can delete book"),
-            ("can_view_book", "Can view book"),
+            ("can_create", "Can create book"),
+            ("can_edit", "Can edit book"),
+            ("can_delete", "Can delete book"),
+            ("can_view", "Can view book"),
         ]
 
     def __str__(self):
@@ -37,8 +37,8 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     email = models.EmailField(unique=True, null=False, blank=False)
-    date_of_birth = models.DateField(blank=False, null=False)
-    profile_photo = models.ImageField(upload_to="profile_pics/", null=False)
+    date_of_birth = models.DateField(blank=False, null=True)
+    profile_photo = models.ImageField(upload_to="profile_pics/", null=True)
 
     objects = CustomUserManager()
 

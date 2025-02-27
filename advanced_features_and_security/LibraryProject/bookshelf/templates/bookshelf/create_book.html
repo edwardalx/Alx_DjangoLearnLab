@@ -1,3 +1,3 @@
-{% if perms.app_name.add_post %}
+{% if perms.bookshelf.can_create %}
     <a href="{% url 'create_post' %}">Create New Post</a>
 {% endif %}
