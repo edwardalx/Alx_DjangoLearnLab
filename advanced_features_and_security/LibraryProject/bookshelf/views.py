@@ -9,7 +9,7 @@ def list_book(request):
 
 from .forms import ExampleForm
 
-def example_view(request):
+def example_form_view(request):
     if request.method == "POST":
         form = ExampleForm(request.POST)
         if form.is_valid():
