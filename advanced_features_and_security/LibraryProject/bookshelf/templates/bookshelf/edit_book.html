@@ -11,7 +11,8 @@
     {% else %}
     <p>You do not have permission to edit a book.</p>
     {% endif %}
-
+    
+    {% csrf_token %}
     {% if perms.bookshelf.can_view %}
     <button type="submit">View</button>
     {% endif %}
