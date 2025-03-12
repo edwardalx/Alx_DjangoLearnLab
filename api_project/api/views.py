@@ -20,5 +20,7 @@ class BookViewSet(viewsets.ModelViewSet):
     serializer_class = [BookSerializer]
 
 class UserToken(views.ObtainAuthToken):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    ...
+# class UserToken(views.ObtainAuthToken):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
