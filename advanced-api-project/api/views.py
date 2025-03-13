@@ -23,7 +23,7 @@ class ListView(ListAPIView):
     serializer_class = BookSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     search_fields = ['title', ' author']
-    ordering_fields = ['username', 'email']
+    ordering_fields = ['publication_year', 'author']
     
 
 class DetailView(RetrieveAPIView):
