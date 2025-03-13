@@ -2,11 +2,13 @@ from django.contrib import messages
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from rest_framework.generics  import ListAPIView, CreateAPIView, UpdateAPIView,DestroyAPIView,RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated,IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 from django.views.generic.edit import CreateView, UpdateView
 from .models import Book
 from .serializers import BookSerializer
 from .forms import BookForm
+from rest_framework import filters
+from rest_framework import generics
 
 
 # Create your views here.
@@ -15,6 +17,9 @@ class ListView(ListAPIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    filter_backends = [filters.SearchFilter, filters.OrderingFilter]
+    search_fields = ['title', ' author']
+    ordering_fields = ['username', 'email']
     
 
 class DetailView(RetrieveAPIView):
