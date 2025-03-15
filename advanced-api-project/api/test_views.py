@@ -11,11 +11,13 @@ class APITestCase(TestCase):
     def setUp(self):
         print('Start Test')
         self.author = Author.objects.create(name="Joe Cole")
+        self.client.login(username="Ed", Password="Edward@alx2025")
 
     def tearDown(self):
         print('After Test')
 
     def test_CreateView(self):
+      
        data = { "title": "MummyReturns","publication_year":"2024-03-14","author": self.author.id }
        response = self.client.post('/api/books/create', data)
        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
