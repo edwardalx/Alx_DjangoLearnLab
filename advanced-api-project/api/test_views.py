@@ -5,13 +5,16 @@ from django.urls import reverse
 from rest_framework import status
 from api.views import ListView
 from django.test import TestCase
-from .models import Author
+from django.contrib.auth.models import User 
+from .models import Author, Book
 
 class APITestCase(TestCase):
     def setUp(self):
         print('Start Test')
         self.author = Author.objects.create(name="Joe Cole")
-        self.client.login(username="Ed", Password="Edward@alx2025")
+        self.book1 = Book.objects.create(title="Original Title", publication_year="2023-01-01", author=self.author)
+        user = User.objects.create(username="Ed", password="Edward@alx2025")
+        self.client.login(username="Ed", password="Edward@alx2025")
 
     def tearDown(self):
         print('After Test')
@@ -35,9 +38,11 @@ class APITestCase(TestCase):
         print(response.data)
 
     def test_UpdateView(self):
-        response = self.client.put('/api/books/update/')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = {"title": "MummyReturnsEdward"}
+        response = self.client.patch(f'/api/books/update/{self.book1.id}/' ,data, format="json")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_DeleteView(self):
-        response = self.client.delete('/api/books/delete/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK )
+        response = self.client.delete(f'/api/books/delete/{self.book1.id}/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT )
+        print(response.status_code)
