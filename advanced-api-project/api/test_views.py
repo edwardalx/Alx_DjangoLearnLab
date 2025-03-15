@@ -7,7 +7,7 @@ from api.views import ListView
 from django.test import TestCase
 from .models import Author
 
-class ApiTestCase(TestCase):
+class APITestCase(TestCase):
     def setUp(self):
         print('Start Test')
         self.author = Author.objects.create(name="Joe Cole")
