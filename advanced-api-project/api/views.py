@@ -51,7 +51,7 @@ class CustomCreateView(CreateView):
         return self.render_to_response(self.get_context_data(form=form))
 
 class UpdateView(UpdateAPIView):
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
