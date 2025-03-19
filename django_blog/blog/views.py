@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from .forms import MyForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from .models import Post
 # Create your views here.
 
 class Home(generic.TemplateView):
@@ -13,7 +14,10 @@ class Home(generic.TemplateView):
         context = super().get_context_data(**kwargs)
         context['message'] =  'Welcome to our site!'
         return context
-
+class Post(generic.ListView):
+    template_name = 'post.html'
+    model = Post
+    context_object_name = 'post'
 
 
 class Register(generic.CreateView):
@@ -24,7 +28,7 @@ class Register(generic.CreateView):
 class Profile(LoginRequiredMixin, generic.UpdateView):
     model = User
     form_class = MyForm
-    template_name = '/blog/profile.html'
+    template_name = 'blog/profile.html'
     success_url = reverse_lazy('profile')
 
     def get_object(self):
