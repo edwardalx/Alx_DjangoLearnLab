@@ -1,21 +1,39 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container">
-    <h2 class="text-center mt-4">Blog Posts</h2>
-    <div class="row">
-        {% for post in posts %}
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <img src="{{ post.image.url }}" class="card-img-top" alt="{{ post.title }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ post.title }}</h5>
-                    <p class="card-text">{{ post.excerpt }}</p>
-                    <a href="{% url 'post_detail' post.id %}" class="btn btn-primary">Read More</a>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
+<h2>{{ post.title }}</h2>
+<p><strong>Author:</strong> {{ post.author }}</p>
+<p>{{ post.content }}</p>
+
+<hr>
+
+<h3>Comments</h3>
+
+{% for comment in post.comment_set.all %}
+    <div class="comment">
+        <p><strong>{{ comment.author }}</strong> - {{ comment.created_at }}</p>
+        <p>{{ comment.content }}</p>
+
+        {% if user.is_authenticated and user == comment.author %}
+            <a href="{% url 'comment-edit' comment.pk %}">Edit</a> |
+            <a href="{% url 'comment-delete' comment.pk %}">Delete</a>
+        {% endif %}
     </div>
-</div>
+    <hr>
+{% empty %}
+    <p>No comments yet. Be the first to comment!</p>
+{% endfor %}
+
+{% if user.is_authenticated %}
+    <h3>Add a Comment</h3>
+    <form method="post" action="{% url 'comment-create' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Post Comment</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Log in</a> to post a comment.</p>
+{% endif %}
+
+<a href="{% url 'post-list' %}">Back to Posts</a>
 {% endblock %}

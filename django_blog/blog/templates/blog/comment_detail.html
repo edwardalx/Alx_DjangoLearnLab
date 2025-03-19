@@ -1,0 +1,16 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+<h2>Comment Detail</h2>
+
+<p><strong>Author:</strong> {{ comment.author }}</p>
+<p><strong>Posted on:</strong> {{ comment.created_at }}</p>
+<p>{{ comment.content }}</p>
+
+{% if user.is_authenticated and user == comment.author %}
+    <a href="{% url 'comment-edit' comment.pk %}">Edit</a> |
+    <a href="{% url 'comment-delete' comment.pk %}">Delete</a>
+{% endif %}
+
+<a href="{% url 'list-comments' %}">Back to Comments</a>
+{% endblock %}
