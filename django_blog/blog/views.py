@@ -2,10 +2,10 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views import generic
 from django.urls import reverse_lazy
-from .forms import MyForm,PostForm
+from .forms import MyForm,PostForm,CommentForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
-from .models import Post
+from .models import Post,Comment
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 # Create your views here.
@@ -106,4 +106,31 @@ class DeleteView(LoginRequiredMixin,UserPassesTestMixin, generic.DeleteView):
     def test_func(self):
         post = self.get_object()
         return self.request.user == post.author  # Ensures only the author can delete
+
+class CommentCreateView(generic.CreateView):
+    model=Comment
+    form_class=CommentForm
+    template_name = 'create-comment.html'
+    success_url = reverse_lazy('list_comments')
+
+class CommentListView(generic.ListView):
+    model = Comment
+    template_name = 'list_comment.html'
+    context_object_name = 'comment'
+
+class CommentDetailView(generic.DetailView):
+    model = Comment
+    template_name = 'comment_detail.html'
+    context_object_name = 'comment'
+class CommentUpdateView(generic.UpdateView, LoginRequiredMixin, UserPassesTestMixin):
+    model=Comment
+    form_class=CommentForm
+    template_name = 'create-comment.html'
+    success_url = reverse_lazy('list_comments')
+class CommentDeleteView(generic.DeleteView, LoginRequiredMixin, UserPassesTestMixin):
+    model = Comment
+    template_name = 'confirm_comment_delete.html'
+    success_url = 'list_comments'
+
+
 

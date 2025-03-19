@@ -16,6 +16,18 @@ class MyForm(UserCreationForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['title', 'content', 'author']
+        fields = ['title', 'content']
+    def save(self, commit=True):
+        post = super().save(commit=False)
+        # Automatically set the author to the logged-in user
+        post.author = self.request.user
+        if commit:
+            post.save()
+        return post
+
+class CommentForm(forms.ModelForm):
+    class Meta:
+        fields = '__all__'
+
 
 
