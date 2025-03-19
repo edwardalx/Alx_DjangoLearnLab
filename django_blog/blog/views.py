@@ -2,8 +2,8 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views import generic
 from django.urls import reverse_lazy
-from .forms import MyForm
-from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import MyForm,PostForm
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import User
 from .models import Post
 from django.contrib.auth.decorators import login_required
@@ -70,14 +70,40 @@ class ProfileUpdate(View):
             return redirect('profile')
         return render(request, 'profile.html', {'form': form})"""
 
-class ListView:
-    ...
-class DetailView:
-    ...
-class CreateView(LoginRequiredMixin):
-    ...
-class UpdateView:
-    ...
-class DeleteView:
-    ...
+class ListView(generic.ListView):
+    template_name = 'blog/post_list.html'
+    model = Post
+    context_object_name = 'posts'
+   
+
+class DetailView(generic.DetailView):
+    template_name = 'blog/post_detail.html'
+    model = Post
+    context_object_name = 'posts'
+class CreateView(LoginRequiredMixin, generic.CreateView):
+    template_name = 'blog/post_forms.html'
+    model = Post
+    form_class = PostForm
+    success_url = reverse_lazy('list-posts')
+
+    def form_valid(self,form):                      # Assign the current user as the author
+        form.instance.author = self.request.user
+        return super().form_valid(form)
+
+
+class UpdateView(LoginRequiredMixin,UserPassesTestMixin,generic.UpdateView):
+    template_name = 'blog/post_forms.html'
+    model = Post
+    form_class = PostForm
+    success_url = reverse_lazy('list-posts')
+
+    def test_func(self):
+        return self.request.user == self.get_object.author             # Ensures only the author can edit
+class DeleteView(LoginRequiredMixin,UserPassesTestMixin, generic.DeleteView):
+    template_name = 'blog/post_confirm_delete.html'
+    model = Post
+    context_object_name = 'list-posts'
+    def test_func(self):
+        post = self.get_object()
+        return self.request.user == post.author  # Ensures only the author can delete
 
