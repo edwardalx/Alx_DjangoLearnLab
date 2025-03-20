@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Post
+from .models import Post, Comment
 
 class MyForm(UserCreationForm):
     username = forms.CharField(min_length=5, max_length=100)
@@ -27,6 +27,7 @@ class PostForm(forms.ModelForm):
 
 class CommentForm(forms.ModelForm):
     class Meta:
+        model = Comment
         fields = '__all__'
 
 
