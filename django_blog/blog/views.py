@@ -74,6 +74,12 @@ class ListView(generic.ListView):
     template_name = 'blog/post_list.html'
     model = Post
     context_object_name = 'posts'
+
+    def get_queryset(self):       #this block of code is to enable filter by tag
+        tag_name = self.request.GET.get('tag')
+        if tag_name:
+            return Post.objects.filter(tags__name__icontains=tag_name)
+        return Post.objects.all()
    
 
 class DetailView(generic.DetailView):
@@ -88,7 +94,15 @@ class CreateView(LoginRequiredMixin, generic.CreateView):
 
     def form_valid(self,form):                      # Assign the current user as the author
         form.instance.author = self.request.user
-        return super().form_valid(form)
+        '''return self.request.user == self.get_object.author  '''
+        response =  super().form_valid(form)
+    # Handle new tags from input
+        new_tags = self.request.POST.get('new_tags')
+        if new_tags:
+            tags_list = [tag.strip() for tag in new_tags.split(',')]  # Split by commas
+            self.object.tags.add(*tags_list)  # Add tags to the post
+
+        return response
 
 
 class UpdateView(LoginRequiredMixin,UserPassesTestMixin,generic.UpdateView):
@@ -98,7 +112,16 @@ class UpdateView(LoginRequiredMixin,UserPassesTestMixin,generic.UpdateView):
     success_url = reverse_lazy('list-posts')
 
     def test_func(self):
-        return self.request.user == self.get_object.author             # Ensures only the author can edit
+        '''return self.request.user == self.get_object.author  '''
+        response = self.request.user == self.get_object.author             # Ensures only the author can edit
+         # Handle new tags from input
+        new_tags = self.request.POST.get('new_tags')
+        if new_tags:
+            tags_list = [tag.strip() for tag in new_tags.split(',')]  # Split by commas
+            self.object.tags.set(tags_list)  # Update tags (replacing old ones)
+
+        return response
+
 class DeleteView(LoginRequiredMixin,UserPassesTestMixin, generic.DeleteView):
     template_name = 'blog/post_confirm_delete.html'
     model = Post

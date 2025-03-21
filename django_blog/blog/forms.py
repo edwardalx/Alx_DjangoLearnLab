@@ -14,9 +14,13 @@ class MyForm(UserCreationForm):
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
 
 class PostForm(forms.ModelForm):
+    # tags = forms.ModelMultipleChoiceField(
+    #     queryset=Tag.objects.all(),
+    #     widget=forms.CheckboxSelectMultiple,  # Allows multiple tag selection
+    #     required=False ) # Tags are optional
     class Meta:
         model = Post
-        fields = ['title', 'content']
+        fields = ['title', 'content','tag']
     def save(self, commit=True):
         post = super().save(commit=False)
         # Automatically set the author to the logged-in user

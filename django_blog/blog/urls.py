@@ -19,9 +19,4 @@ urlpatterns = [
     path('post/<int:pk>/comment/<int:pk>/',view= CommentDetailView.as_view(), name='comment'),
     path('comment/<int:pk>/update/',view= CommentUpdateView.as_view(), name='update_comment'),
     path('comment/<int:pk>/delete/',view= CommentDeleteView.as_view(), name='delete_comment'),
-
 ]
-
-
-
-#["comment/<int:pk>/update/", "post/<int:pk>/comments/new/", "comment/<int:pk>/delete/"]
