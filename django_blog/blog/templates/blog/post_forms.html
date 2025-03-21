@@ -13,7 +13,6 @@
     <a href="{% url 'post-list' %}">Cancel</a>
 {% endblock %} --> -->
 
-
 {% extends "blog/base.html" %}
 
 {% block content %}
@@ -34,12 +33,10 @@
 
         <!-- New Tag Input -->
         <label for="new_tags">Add New Tags (comma-separated):</label>
-        <input type="text" name="new_tags" id="new_tags">
+        <input type="text" name="new_tags" id="new_tags" value="{{ form.tags.value }}">
 
         <button type="submit">
             {% if object %}Update{% else %}Publish{% endif %}
         </button>
     </form>
-
-    <a href="{% url 'post-list' %}">Back to Posts</a>
 {% endblock %}

@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Post, Comment
-
+from taggit.forms import TagWidget
 class MyForm(UserCreationForm):
     username = forms.CharField(min_length=5, max_length=100)
     first_name = forms.CharField(required=True, max_length=200)
@@ -14,6 +14,7 @@ class MyForm(UserCreationForm):
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
 
 class PostForm(forms.ModelForm):
+    tags = forms.CharField(widget=TagWidget(), required=False)
     # tags = forms.ModelMultipleChoiceField(
     #     queryset=Tag.objects.all(),
     #     widget=forms.CheckboxSelectMultiple,  # Allows multiple tag selection
@@ -27,8 +28,11 @@ class PostForm(forms.ModelForm):
         post.author = self.request.user
         if commit:
             post.save()
+     # If tags are provided, save them using django-taggit's functionality
+        if self.cleaned_data.get('tags'):
+            post.tags.add(*self.cleaned_data['tags'].split(','))
         return post
-
+    
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
