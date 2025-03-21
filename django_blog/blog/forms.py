@@ -14,7 +14,7 @@ class MyForm(UserCreationForm):
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
 
 class PostForm(forms.ModelForm):
-    tags = TagField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Enter comma-separated tags'}))
+    #tags = TagField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Enter comma-separated tags'}))
     ''' tags = forms.CharField(widget=TagWidget(), required=False)'''
     # tags = forms.ModelMultipleChoiceField(
     #     queryset=Tag.objects.all(),
@@ -23,6 +23,9 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'content','tag']
+        widgets = {
+            'tags': forms.TextInput(attrs={'placeholder': 'Enter tags, comma-separated'}),
+        }
     def save(self, commit=True):
         post = super().save(commit=False)
         # Automatically set the author to the logged-in user
