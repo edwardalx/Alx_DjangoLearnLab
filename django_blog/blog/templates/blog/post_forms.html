@@ -1,4 +1,4 @@
-{% extends "blog/base.html" %}
+<!-- {% extends "blog/base.html" %}
 
 {% block content %}
     <h1>{% if post %}Edit{% else %}Create{% endif %} Post</h1>
@@ -7,8 +7,39 @@
         {% csrf_token %}
         {{ form.as_p }}  <!-- ✅ Renders form fields -->
         
-        <button type="submit">{% if post %}Update{% else %}Create{% endif %} Post</button>
+        <!-- <button type="submit">{% if post %}Update{% else %}Create{% endif %} Post</button>
     </form>
 
     <a href="{% url 'post-list' %}">Cancel</a>
+{% endblock %} --> -->
+
+
+{% extends "blog/base.html" %}
+
+{% block content %}
+    <h2>{% if object %}Edit Post{% else %}Create Post{% endif %}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <!-- Display Existing Tags -->
+        {% if object and object.tags.all %}
+            <p><strong>Current Tags:</strong> 
+                {% for tag in object.tags.all %}
+                    <span>{{ tag }}</span>{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </p>
+        {% endif %}
+
+        <!-- New Tag Input -->
+        <label for="new_tags">Add New Tags (comma-separated):</label>
+        <input type="text" name="new_tags" id="new_tags">
+
+        <button type="submit">
+            {% if object %}Update{% else %}Publish{% endif %}
+        </button>
+    </form>
+
+    <a href="{% url 'post-list' %}">Back to Posts</a>
 {% endblock %}
