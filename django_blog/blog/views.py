@@ -1,4 +1,4 @@
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views import generic
 from django.urls import reverse_lazy
@@ -8,6 +8,8 @@ from django.contrib.auth.models import User
 from .models import Post,Comment
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.db.models import Q
+from taggit.models import Tag
 # Create your views here.
 
 class Home(generic.TemplateView):
@@ -76,12 +78,26 @@ class ListView(generic.ListView):
     context_object_name = 'posts'
 
     def get_queryset(self):       #this block of code is to enable filter by tag
-        tag_name = self.request.GET.get('tag')
-        if tag_name:
-            return Post.objects.filter(tags__name__icontains=tag_name)
-        return Post.objects.all()
-   
+        queryset = Post.objects.all()
+        query = self.request.GET.get('q')
+        tag_slug = self.kwargs.get('tag_slug')
 
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) | Q(content__icontains=query) | Q(tags__name__icontains=query)
+            ).distinct()
+
+        if tag_slug:
+            tag = get_object_or_404(Tag, slug=tag_slug)
+            queryset = queryset.filter(tags__in=[tag])
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["tag_slug"] = self.kwargs.get('tag_slug', None)
+        return context
+    
 class DetailView(generic.DetailView):
     template_name = 'blog/post_detail.html'
     model = Post
@@ -101,7 +117,6 @@ class CreateView(LoginRequiredMixin, generic.CreateView):
         if new_tags:
             tags_list = [tag.strip() for tag in new_tags.split(',')]  # Split by commas
             self.object.tags.add(*tags_list)  # Add tags to the post
-
         return response
 
 
@@ -156,4 +171,18 @@ class CommentDeleteView(generic.DeleteView, LoginRequiredMixin, UserPassesTestMi
     success_url = 'list_comments'
 
 
+class PostSearchView(ListView):
+    model = Post
+    template_name = 'blog/post_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        if query:
+            return Post.objects.filter(
+                Q(title__icontains=query) | 
+                Q(content__icontains=query) | 
+                Q(tags__name__icontains=query)  # If using django-taggit
+            ).distinct()
+        return Post.objects.all()
 
