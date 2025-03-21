@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Post, Comment
-from taggit.forms import TagWidget
+from taggit.forms import TagWidget,TagField
 class MyForm(UserCreationForm):
     username = forms.CharField(min_length=5, max_length=100)
     first_name = forms.CharField(required=True, max_length=200)
@@ -14,7 +14,8 @@ class MyForm(UserCreationForm):
         fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']
 
 class PostForm(forms.ModelForm):
-    tags = forms.CharField(widget=TagWidget(), required=False)
+    tags = TagField(required=False, widget=forms.TextInput(attrs={'placeholder': 'Enter comma-separated tags'}))
+    ''' tags = forms.CharField(widget=TagWidget(), required=False)'''
     # tags = forms.ModelMultipleChoiceField(
     #     queryset=Tag.objects.all(),
     #     widget=forms.CheckboxSelectMultiple,  # Allows multiple tag selection
