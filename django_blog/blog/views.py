@@ -78,25 +78,28 @@ class ListView(generic.ListView):
     context_object_name = 'posts'
 
     def get_queryset(self):       #this block of code is to enable filter by tag
-        queryset = Post.objects.all()
+        queryset = super().get_queryset()
         query = self.request.GET.get('q')
-        tag_slug = self.kwargs.get('tag_slug')
-
         if query:
             queryset = queryset.filter(
                 Q(title__icontains=query) | Q(content__icontains=query) | Q(tags__name__icontains=query)
             ).distinct()
-
-        if tag_slug:
-            tag = get_object_or_404(Tag, slug=tag_slug)
-            queryset = queryset.filter(tags__in=[tag])
-
         return queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["tag_slug"] = self.kwargs.get('tag_slug', None)
         return context
+class PostByTagListView(generic.ListView):
+    model = Post
+    template_name = 'blog/tagged_post_list.html'
+    context_object_name = 'tag'
+
+    def get_queryset(self):
+        tag_slug = self.kwargs.get('tag_slug')
+        tag = Tag.objects.get(slug=tag_slug)
+        return Post.objects.filter(tags__in=[tag])
+
     
 class DetailView(generic.DetailView):
     template_name = 'blog/post_detail.html'
