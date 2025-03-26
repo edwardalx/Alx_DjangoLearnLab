@@ -14,7 +14,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         followers = validated_data.pop('followers')
-        user = get_user_model().objects.create(**validated_data)
+        user = get_user_model().objects.create_user(**validated_data)
         user.followers = followers
         Token.objects.create(user=user)
         return user
