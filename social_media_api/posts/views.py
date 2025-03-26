@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from serializers import CommentSerializer, PostSerializer,Post,Comment
+from .serializers import CommentSerializer, PostSerializer,Post,Comment
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
