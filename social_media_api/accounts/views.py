@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.generics import CreateAPIView
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet,ViewSet
-from .serializer import CustomUserSerializer
+from .serializers import CustomUserSerializer
 from .models import CustomUser
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
