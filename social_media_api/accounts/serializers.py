@@ -6,15 +6,16 @@ from django.contrib.auth import get_user_model
 CustomUser = get_user_model()
 
 class CustomUserSerializer(serializers.ModelSerializer):
-    followers = serializers.PrimaryKeyRelatedField(many=True, queryset=CustomUser.objects.all())
+    followers = serializers.PrimaryKeyRelatedField(many=True, queryset=CustomUser.objects.all() )
+    password = serializers.CharField(write_only=True)  # Hide password in responses
     class Meta:
         model = CustomUser
         fields = ['username','password', 'first_name', 'last_name','bio','profile_picture','followers' ]
 
     def create(self, validated_data):
         followers = validated_data.pop('followers')
-        user = CustomUser.objects.create(**validated_data)
+        user = get_user_model().objects.create(**validated_data)
         user.followers = followers
-        Token.objects.get_or_create(user=user)
+        Token.objects.create(user=user)
         return user
 
