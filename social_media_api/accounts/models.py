@@ -7,6 +7,11 @@ class CustomUser(AbstractUser):
     profile_picture = models.ImageField(upload_to='profile_picture/')
     followers = models.ManyToManyField('CustomUser', symmetrical=False)
 
+    
+    USERNAME_FIELD = "username"
+    REQUIRED_FIELDS = ["email", "first_name","last_name"]
+    
+
     groups = models.ManyToManyField(Group, related_name="customer_groups", blank=True)
     user_permissions = models.ManyToManyField(Permission, related_name="customer_permissions", blank=True)
     def __str__(self):
