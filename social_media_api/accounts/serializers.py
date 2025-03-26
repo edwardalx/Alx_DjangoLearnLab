@@ -7,7 +7,7 @@ CustomUser = get_user_model()
 
 class CustomUserSerializer(serializers.ModelSerializer):
     followers = serializers.PrimaryKeyRelatedField(many=True, queryset=CustomUser.objects.all() )
-    password = serializers.CharField(write_only=True)  # Hide password in responses
+    password = serializers.CharField()  # Hide password in responses
     class Meta:
         model = CustomUser
         fields = ['username','password', 'first_name', 'last_name','bio','profile_picture','followers' ]
