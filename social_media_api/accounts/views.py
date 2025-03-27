@@ -30,7 +30,7 @@ def loginView(self, request):
             return Response({"token": token.key}, status=status.HTTP_200_OK)
         return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
     
-class CustomUserLoginAPIView(generics.APIView):
+class CustomUserLoginAPIView(generics.GenericAPIView):
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
