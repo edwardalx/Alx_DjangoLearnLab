@@ -9,6 +9,6 @@ urlpatterns=[
 
    path('', include(router.urls)),
    path('feed/', view=PostFeedView.as_view, name='post-feed'),
-   path('posts/<int:id>/like/', view=like_post, name='like-post'),
-   path('posts/<int:id>/unlike/', view=unlike_post, name='unlike-post'),
+   path('<int:id>/like/', view=like_post, name='like-post'),
+   path('<int:id>/unlike/', view=unlike_post, name='unlike-post'),
 ]
