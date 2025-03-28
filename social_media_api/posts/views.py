@@ -62,9 +62,10 @@ def create_notification(recipient, actor, verb, target_object):
 @permission_classes([permissions.IsAuthenticated])
 def like_post(request, pk):
     post_to_like = generics.get_object_or_404(Post, pk=pk)
+    post = post_to_like
     if post_to_like.author == request.user:
         return Response({'error': 'you can not like your own post'})
-    like, created =Like.objects.get_or_create(user=request.user, post=post_to_like)
+    like, created =Like.objects.get_or_create(user=request.user, post=post)
     if like:
         return Response({'message', 'Post Liked'}, status=status.HTTP_201_CREATED)
     Response({'error': 'You have already liked this post.'}, status=status.HTTP_400_BAD_REQUEST)
