@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from .serializers import CommentSerializer, PostSerializer,Post,Comment
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import permissions
 from rest_framework.authentication import TokenAuthentication
 # Create your views here.
 
@@ -18,9 +18,19 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     pagination_class =PostPagination
-    permission_classes = IsAuthenticatedOrReadOnly
+    permission_classes = permissions.IsAuthenticated
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     queryset = Comment.objects.all()
-    permission_classes= IsAuthenticatedOrReadOnly
+    permission_classes= permissions.IsAuthenticated
+
+class PostFeedView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = permissions.IsAuthenticated
+
+    def get_queryset(self):
+        post = self.get_object.author
+        following_users = post.following
+        Post.objects.filter(author__in=following_users).order_by(Post.created_at)
+        return super().get_queryset()
