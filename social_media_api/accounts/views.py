@@ -1,5 +1,5 @@
 from django.shortcuts import get_object_or_404, render
-from rest_framework import generics 
+from rest_framework import generics,viewsets
 from .serializers import CustomUserSerializer
 from .models import CustomUser
 from rest_framework.authtoken.models import Token
@@ -41,7 +41,7 @@ class CustomUserLoginAPIView(generics.GenericAPIView):
             return Response({"token": token.key}, status=status.HTTP_200_OK)
         return Response({"error": "Invalid credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
-class ProfileManagementView(generics.ModelViewSet):
+class ProfileManagementView(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]

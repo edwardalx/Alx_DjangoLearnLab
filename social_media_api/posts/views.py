@@ -33,9 +33,9 @@ class PostFeedView(generics.ListAPIView):
     permission_classes = permissions.IsAuthenticated
 
     def get_queryset(self):
-        post = self.get_object.author
-        following_users = post.following.all()
-        Post.objects.filter(author__in=following_users).order_by(Post.created_at)
+        user = self.request.user
+        following_users = user.following.all()
+        Post.objects.filter(author__in=following_users).order_by('-created_at')
         return super().get_queryset()
     
 
@@ -45,7 +45,7 @@ class PostFeedView(generics.ListAPIView):
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
-def like_post(self, request):
+def like_post(request, post_id):
     ...
 
 
@@ -53,5 +53,5 @@ def like_post(self, request):
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
-def unlike_post(self, request):
+def unlike_post(request, post_id):
     ...
