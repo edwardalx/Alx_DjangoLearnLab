@@ -10,4 +10,5 @@ urlpatterns=[
    path('', include(router.urls)),
    path('follow/<int:pk>',view=follow_user , name='folloe-user'),
    path('unfollow/<int:pk>', view=unfollow_user, name='Unfollow-user'), 
+  
 ]
