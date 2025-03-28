@@ -6,7 +6,7 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import permissions
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view,permission_classes
-from models import Like
+from .models import Like
 from notifications.models import Notification
 from rest_framework.response  import Response
 from rest_framework import status
