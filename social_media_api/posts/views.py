@@ -60,8 +60,8 @@ def create_notification(recipient, actor, verb, target_object):
 
 @api_view(['POST'])
 @permission_classes([permissions.IsAuthenticated])
-def like_post(request, post_id):
-    post_to_like = generics.get_object_or_404(Post, id = post_id)
+def like_post(request, pk):
+    post_to_like = generics.get_object_or_404(Post, pk=pk)
     if post_to_like.author == request.user:
         return Response({'error': 'you can not like your own post'})
     like, created =Like.objects.get_or_create(user=request.user, post=post_to_like)
