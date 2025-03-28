@@ -23,9 +23,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-rz2lc^#+x#4u^ti&+d_5p+r=a#5&rg=5nb)$d9k@s4^nuq*!61'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "edwardalxsocialmedia.com",  # Main domain
+    "www.edwardalxsocialmedia.com",  # Subdomain
+   
+
+]
 
 
 # Application definition
@@ -42,6 +47,7 @@ INSTALLED_APPS = [
     'notifications',
     'rest_framework',
     'rest_framework.authtoken',
+
 ]
 
 MIDDLEWARE = [
@@ -137,3 +143,20 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10, 
 }
 AUTH_USER_MODEL = 'accounts.CustomUser'
+#Security
+SECURE_BROWSER_XSS_FILTER = True
+X_FRAME_OPTIONS = 'DENY'
+SECURE_CONTENT_TYPE_NOSNIFF = True
+# Secure Cookies
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+# Enable SSL Redirect
+SECURE_SSL_REDIRECT = True
+# Set security headers
+SECURE_HSTS_SECONDS = 31536000 
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True 
+SECURE_HSTS_PRELOAD = True
+# Tell Django to trust the proxy’s HTTPS header
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+import django_heroku
+django_heroku.settings(locals())
