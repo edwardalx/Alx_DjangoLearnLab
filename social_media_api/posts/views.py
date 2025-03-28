@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .serializers import CommentSerializer, PostSerializer,Post,Comment
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import permissions
 from rest_framework.authentication import TokenAuthentication
@@ -20,27 +20,19 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     pagination_class =PostPagination
-    permission_classes = permissions.IsAuthenticatedOrReadOnly
+    permission_classes = permissions.IsAuthenticated
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     queryset = Comment.objects.all()
-    permission_classes= permissions.IsAuthenticatedOrReadOnly
+    permission_classes= permissions.IsAuthenticated
 
+class PostFeedView(generics.ListAPIView):
+    serializer_class = PostSerializer
+    permission_classes = permissions.IsAuthenticated
 
-#post to like  =>> get_object_or_404(Post, user_id)
-#if request.user in Like.user raise error
-#else add post to Like.post
-
-@api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
-def like_post(self, request):
-    ...
-
-
-
-
-@api_view(['POST'])
-@permission_classes([permissions.IsAuthenticated])
-def unlike_post(self, request):
-    ...
+    def get_queryset(self):
+        post = self.get_object.author
+        following_users = post.following.all()
+        Post.objects.filter(author__in=following_users).order_by(Post.created_at)
+        return super().get_queryset()
