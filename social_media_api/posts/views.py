@@ -2,8 +2,10 @@ from django.shortcuts import render
 from .serializers import CommentSerializer, PostSerializer,Post,Comment
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework import permissions
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import api_view,permission_classes
+
 # Create your views here.
 
 class PostPagination(PageNumberPagination):
@@ -18,9 +20,27 @@ class PostViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     queryset = Post.objects.all()
     pagination_class =PostPagination
-    permission_classes = IsAuthenticatedOrReadOnly
+    permission_classes = permissions.IsAuthenticatedOrReadOnly
 
 class CommentViewSet(viewsets.ModelViewSet):
     serializer_class = PostSerializer
     queryset = Comment.objects.all()
-    permission_classes= IsAuthenticatedOrReadOnly
+    permission_classes= permissions.IsAuthenticatedOrReadOnly
+
+
+#post to like  =>> get_object_or_404(Post, user_id)
+#if request.user in Like.user raise error
+#else add post to Like.post
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def like_post(self, request):
+    ...
+
+
+
+
+@api_view(['POST'])
+@permission_classes([permissions.IsAuthenticated])
+def unlike_post(self, request):
+    ...
