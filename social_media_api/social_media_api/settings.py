@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -90,6 +91,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+        'PORT':''
     }
 }
 
@@ -129,6 +131,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+
+# In production, you will need to collect static files to this directory
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -160,5 +167,19 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 # Tell Django to trust the proxy’s HTTPS header
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# AWS S3 settings for storing media files
+AWS_ACCESS_KEY_ID = 'your-aws-access-key-id'
+AWS_SECRET_ACCESS_KEY = 'your-aws-secret-access-key'
+AWS_STORAGE_BUCKET_NAME = 'your-s3-bucket-name'
+AWS_S3_REGION_NAME = 'your-region'  # e.g., 'us-east-1'
+
+# Configure media files to be stored on S3
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+# Media URL to access files
+MEDIA_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/'
+
+
 import django_heroku
 django_heroku.settings(locals())
